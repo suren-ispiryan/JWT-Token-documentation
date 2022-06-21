@@ -1,4 +1,5 @@
-=================== JWT Token =================== 
+============================= JWT Token =============================
+=====================================================================
 
 1. composer require tymon/jwt-auth
 
@@ -66,6 +67,7 @@
 				$this->middleware('auth:api', ['except' => ['login']]); 
 			}
 			
+			// via credentals
 			public function login() {
 				$credentials = request(['email', 'password']);
 				if (! $token = auth()->attempt($credentials)) {
@@ -74,15 +76,18 @@
 				return $this->respondWithToken($token);
 			}
 			
+			// via auth user
 			public function me() {
 				return response()->json(auth()->user());
 			}
 			
+			// log out
 			public function logout() {
 				auth()->logout();
 				return response()->json(['message' => 'Successfully logged out']);
 			}
 			
+			// refresh token
 			public function refresh() {
 				return $this->respondWithToken(auth()->refresh());
 			}
@@ -105,40 +110,40 @@
 
 10. Authenticated requests
 	There are a number of ways to send the token via http:
-		10.1 Authorization header
-				Authorization: Bearer eyJhbGciOiJIUzI1NiI...
-		10.2 Query string parameter
-				http://example.dev/me?token=eyJhbGciOiJIUzI1NiI...
-		10.3 Post parameter
-		10.4 Cookies
-		10.5 Laravel route parameter
+	10.1 Authorization header
+		Authorization: Bearer eyJhbGciOiJIUzI1NiI...
+	10.2 Query string parameter
+		http://example.dev/me?token=eyJhbGciOiJIUzI1NiI...
+	10.3 Post parameter
+	10.4 Cookies
+	10.5 Laravel route parameter
 
 11. Methods 
-	11.1 attempt() -> Attempt to authenticate a user via some credentials.
-		$token = auth()->attempt($credentials);
-		login()
+	11.1 Attempt() -> Attempt to authenticate a user via some credentials.
+		 $token = auth()->attempt($credentials);
+		 login()
 	11.2 Log a user in and return a jwt for them.
-		$user = User::first();
-		$token = auth()->login($user);
+		 $user = User::first();
+		 $token = auth()->login($user);
 	11.3 user() -> Get the currently authenticated user.
-		$user = auth()->user();
+		 $user = auth()->user();
 	11.4 serOrFail() -> Get the currently authenticated user or throw an exception.
-		try { $user = auth()->userOrFail(); } 
-		catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) { // do something }
+		 try { $user = auth()->userOrFail(); } 
+		 catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) { // do something }
 	11.5 serOrFail() -> Get the currently authenticated user or throw an exception.
-		try { $user = auth()->userOrFail(); } 
-		catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) { // do something }
+		 try { $user = auth()->userOrFail(); } 
+		 catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) { // do something }
 	11.6 refresh() -> Refresh a token, which invalidates the current one
-		$newToken = auth()->refresh();
-		// Pass true as the first param to force the token to be blacklisted "forever".
-		// The second parameter will reset the claims for the new token
-		$newToken = auth()->refresh(true, true);
+		 $newToken = auth()->refresh();
+		 // Pass true as the first param to force the token to be blacklisted "forever".
+		 // The second parameter will reset the claims for the new token
+		 $newToken = auth()->refresh(true, true);
 	11.7 invalidate() -> Invalidate the token (add it to the blacklist)
-		auth()->invalidate();
-		// Pass true as the first param to force the token to be blacklisted "forever".
-		auth()->invalidate(true);
+		 auth()->invalidate();
+		 // Pass true as the first param to force the token to be blacklisted "forever".
+		 auth()->invalidate(true);
 	11.8 tokenById() -> Get a token based on a given user's id.
-		$token = auth()->tokenById(123);
+		 $token = auth()->tokenById(123);
 
 12. Let's review some of the options in the config/jwt.php
 	'secret' => env('JWT_SECRET'),
